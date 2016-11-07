@@ -22,7 +22,6 @@ defmodule Plexy.RequestIdTest do
     conn = %Plug.Conn{}
     |> RequestId.call(RequestId.init([]))
 
-
     header = hd(Plug.Conn.get_resp_header(conn, "request-id"))
 
     assert Regex.match?(~r/[a-z0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}/, header)
@@ -36,7 +35,6 @@ defmodule Plexy.RequestIdTest do
     }
     |> RequestId.call(RequestId.init([]))
 
-
     header = hd(Plug.Conn.get_resp_header(conn, "request-id"))
 
     assert Regex.match?(~r/[a-z0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}/, header)
@@ -47,7 +45,6 @@ defmodule Plexy.RequestIdTest do
     conn = %Plug.Conn{}
     |> RequestId.call(RequestId.init([]))
 
-
     assert Regex.match?(~r/[a-z0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}/, 
                         conn.assigns.request_id)
   end
@@ -55,7 +52,6 @@ defmodule Plexy.RequestIdTest do
   test "adds request_ids to conn assigns" do
     conn = %Plug.Conn{}
     |> RequestId.call(RequestId.init([]))
-
 
     assert Regex.match?(~r/[a-z0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}/, 
                         hd(conn.assigns.request_ids))
