@@ -1,4 +1,4 @@
-defmodule Plug.Instrumentor do
+defmodule Plexy.Instrumentor do
   @moduledoc """
   A plug for logging basic request information in the format:
   instrumentation at=start method=get path=/apps
