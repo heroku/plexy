@@ -28,7 +28,7 @@ defmodule Plexy.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ecto, "~> 2.0"},
+      {:uuid, "~> 1.1"},
       {:plug, "~> 1.0"},
       {:credo, "~> 0.4", only: [:dev, :test]}
     ]
