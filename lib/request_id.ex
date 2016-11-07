@@ -44,7 +44,9 @@ defmodule Plexy.RequestId do
 
   defp get_request_id(conn, header) do
     Conn.get_req_header(conn, header)
-    |> Enum.flat_map(&String.split(&1, ","))
+    |> List.flatten()
+    |> Enum.map(&String.split(&1, ","))
+    |> List.flatten()
   end
 
   defp set_request_ids({conn, request_ids}, header) do

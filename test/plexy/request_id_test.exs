@@ -41,6 +41,25 @@ defmodule Plexy.RequestIdTest do
     assert String.ends_with?(header, ",1234-abc")
   end
 
+  test "keeps all existing request ids when mulitple exist" do
+    conn = %Plug.Conn{
+      req_headers: %{
+        "request-id" => ["1234-abcd", "5678-defg"],
+        "x-request-id" => ["9876-zyxw,5432-vuts"],
+      }
+    }
+    |> RequestId.call(RequestId.init([]))
+
+    request_id = hd(Plug.Conn.get_resp_header(conn, "request-id"))
+
+    assert String.contains?(request_id, "1234-abcd")
+    assert String.contains?(request_id, "5678-defg")
+    assert String.contains?(request_id, "9876-zyxw")
+    assert String.contains?(request_id, "5432-vuts")
+
+    assert length(String.split(request_id, ",")) == 5
+  end
+
   test "adds request_id to conn assigns" do
     conn = %Plug.Conn{}
     |> RequestId.call(RequestId.init([]))
