@@ -29,7 +29,8 @@ defmodule Plexy.Mixfile do
   defp deps do
     [
       {:ecto, "~> 2.0"},
-      {:plug, "~> 1.0"}
+      {:plug, "~> 1.0"},
+      {:credo, "~> 0.4", only: [:dev, :test]}
     ]
   end
 end
