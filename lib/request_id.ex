@@ -16,19 +16,22 @@ defmodule Plexy.RequestId do
   end
 
   defp get_request_ids(conn, req_headers) do
-    {conn, Enum.join(req_headers, &get_request_id(conn, &1), ",")}
+    ids = Enum.map(req_headers, &get_request_id(conn, &1))
+          |> Enum.filter(&(&1))
+          |> Enum.flat_map(&(&1))
+    {conn, [Ecto.UUID.generate() | ids]}
   end
 
   defp get_request_id(conn, header) do
-    case Conn.get_req_header(conn, header) |> String.split(",") do
-      [h | t] -> [Ecto.UUID.generate() | [h | t]]
-      _       -> [Ecto.UUID.generate()]
-    end
+    Conn.get_req_header(conn, header)
+    |> Enum.flat_map(&String.split(&1, ","))
   end
 
   defp set_request_ids({conn, request_ids}, header) do
-    conn = Conn.put_resp_header(conn, header, request_ids)
-    %{conn | request_id: Enum.first(request_ids),
-             request_ids: request_ids}
+    string = Enum.join(request_ids, ",")
+    conn = Conn.put_resp_header(conn, header, string)
+    assigns = Map.put(conn.assigns, :request_id, hd(request_ids))
+              |> Map.put(:request_ids, request_ids)
+    %{conn | assigns: assigns}
   end
 end
