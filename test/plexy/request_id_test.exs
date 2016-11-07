@@ -11,8 +11,10 @@ defmodule Plexy.RequestIdTest do
   end
 
   test "init allows config" do
-    config = RequestId.init(req_headers: ["my-foo-header"])
+    config = RequestId.init(req_headers: ["my-foo-header"],
+                            res_header: "foobar-header")
 
     assert config.req_headers == ["my-foo-header"]
+    assert config.res_header == "foobar-header"
   end
 end
