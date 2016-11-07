@@ -10,7 +10,7 @@ defmodule Plexy.LoggerTest do
     end)
 
     assert logged =~ "foo=1"
-    assert logged =~ "test=\"bar\""
+    assert logged =~ "test=bar"
   end
 
   test "logs regular strings" do

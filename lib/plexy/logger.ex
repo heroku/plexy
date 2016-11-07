@@ -1,25 +1,30 @@
 defmodule Plexy.Logger do
   require Logger
 
-  def info(datum) when is_list(datum) or is_map(datum) do
-    datum |> list_to_line |> info
+  def info(datum, meta \\ [])
+  def info(datum, meta) when is_list(datum) or is_map(datum) do
+    datum |> list_to_line |> info(meta)
   end
 
-  def warn(datum) when is_list(datum) or is_map(datum) do
-    datum |> list_to_line |> warn
+  def warn(datum, meta \\ [])
+  def warn(datum, meta) when is_list(datum) or is_map(datum) do
+    datum |> list_to_line |> warn(meta)
   end
 
-  def debug(datum) when is_list(datum) or is_map(datum) do
-    datum |> list_to_line |> debug
+  def debug(datum, meta \\ [])
+  def debug(datum, meta) when is_list(datum) or is_map(datum) do
+    datum |> list_to_line |> debug(meta)
   end
 
-  def error(datum) when is_list(datum) or is_map(datum) do
-    datum |> list_to_line |> error
+  def error(datum, meta \\ [])
+  def error(datum, meta) when is_list(datum) or is_map(datum) do
+    datum |> list_to_line |> error(meta)
   end
 
-  def log(level, datum) when is_list(datum) or is_map(datum) do
+  def log(level, datum, meta \\ [])
+  def log(level, datum, meta) when is_list(datum) or is_map(datum) do
     line = datum |> list_to_line
-    log(level, line)
+    log(level, line, meta)
   end
 
   def measure(metric, fun) do
@@ -44,16 +49,25 @@ defmodule Plexy.Logger do
 
   defp list_to_line(datum) when is_list(datum) or is_map(datum) do
     datum
-    |> Enum.reduce("", fn
-      ({k, v}, acc) when is_atom(k) -> "#{acc}#{Atom.to_string(k)}=#{inspect(v)} "
-      ({k, v}, acc) -> "#{acc}#{k}=#{inspect(v)} "
-    end)
+    |> Enum.reduce("", &pair_to_segment/2)
     |> String.trim_trailing(" ")
   end
 
-  defdelegate info(str), to: Elixir.Logger
-  defdelegate warn(str), to: Elixir.Logger
-  defdelegate debug(str), to: Elixir.Logger
-  defdelegate error(str), to: Elixir.Logger
-  defdelegate log(level, str), to: Elixir.Logger
+  defp pair_to_segment({k, v}, acc) when is_atom(k) do
+    pair_to_segment({Atom.to_string(k), v}, acc)
+  end
+
+  defp pair_to_segment({k, v}, acc) when is_binary(v) or is_number(v) do
+    "#{acc}#{k}=#{v} "
+  end
+
+  defp pair_to_segment({k, v}, acc) do
+    pair_to_segment({k, inspect(v)}, acc)
+  end
+
+  defdelegate info(str, meta), to: Elixir.Logger
+  defdelegate warn(str, meta), to: Elixir.Logger
+  defdelegate debug(str, meta), to: Elixir.Logger
+  defdelegate error(str, meta), to: Elixir.Logger
+  defdelegate log(level, str, meta), to: Elixir.Logger
 end
