@@ -28,11 +28,7 @@ defmodule Plexy.RequestIdTest do
   end
 
   test "adds a request id header when one already exists" do
-    conn = %Plug.Conn{
-      req_headers: %{
-        "request-id" => "1234-abc"
-      }
-    }
+    conn = %Plug.Conn{req_headers: [{"request-id", "1234-abc"}]}
     |> RequestId.call(RequestId.init([]))
 
     header = hd(Plug.Conn.get_resp_header(conn, "request-id"))
@@ -53,10 +49,8 @@ defmodule Plexy.RequestIdTest do
 
     request_id = hd(Plug.Conn.get_resp_header(conn, "request-id"))
 
-    assert String.contains?(request_id, "1234-abcd")
-    assert String.contains?(request_id, "5678-efgh")
-    assert String.contains?(request_id, "9876-zyxw")
-    assert String.contains?(request_id, "5432-vuts")
+    assert String.contains?(request_id, "1234-abcd,5678-efgh")
+    assert String.contains?(request_id, "9876-zyxw,5432-vuts")
 
     assert length(String.split(request_id, ",")) == 5
   end
@@ -76,5 +70,4 @@ defmodule Plexy.RequestIdTest do
     assert Regex.match?(~r/[a-z0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}/, 
                         hd(conn.assigns.request_ids))
   end
-
 end
