@@ -15,7 +15,6 @@ defmodule Plexy.Instrumentor do
     Keyword.get(opts, :log, :info)
   end
 
-
   @doc """
   Logs the current request details when the plug is called, and logs the
   request timing and status before the response is sent.
@@ -24,22 +23,26 @@ defmodule Plexy.Instrumentor do
     context = [
       instrumentation: true,
       method:          conn.method,
-      path:            conn.path,
+      path:            conn.request_path,
     ]
 
-    Logger.log(level, Keyword.put(context, :at, "start"))
+    log(level, Keyword.put(context, :at, "start"))
 
     start = System.monotonic_time()
 
     Conn.register_before_send(conn, fn conn ->
       stop = System.monotonic_time()
       diff = System.convert_time_unit(stop - start, :native, :milli_seconds)
-      Logger.log(level, %{
+      log(level, [
         at:      "finish",
         elapsed: diff,
         status:  conn.status
-      })
+      ])
       conn
     end)
+  end
+
+  def log(level, msg) do
+    Logger.log(level, inspect(msg))
   end
 end
