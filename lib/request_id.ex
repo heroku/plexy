@@ -42,7 +42,7 @@ defmodule Plexy.RequestId do
         headers -> acc ++ headers
       end
     end)
-    {conn, [Ecto.UUID.generate() | ids]}
+    {conn, [UUID.uuid4() | ids]}
   end
 
   @doc """
