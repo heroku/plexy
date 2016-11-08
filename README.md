@@ -20,7 +20,21 @@ Notably, Plexy is not a framework or a set of code generators. You can use Plexy
 
   2. Require Plexy plugs in your application:
 
+    ```elixir
+    defmodule MyRouter do
+      use Plug.Router
+
+      plug Plexy.RequestId
+      plug Instrumentor
+      plug :match
+      plug :dispatch
+    end
     ```
+
+  3. Call the `Plexy.Logger` wherever you wish to log information:
+
+    ```elixir
+    Plexy.Logger.count(:http_clients_404, 1)
     ```
 
 ## Usage
