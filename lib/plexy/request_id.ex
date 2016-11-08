@@ -7,18 +7,20 @@ defmodule Plexy.RequestId do
   alias Plug.Conn
   @behaviour Plug
 
+  @default_headers ["request-id", "x-request-id"]
+
   @doc """
   Initializes the plug. Returns a configuration map with specified
   :req_headers and :res_headers for use by the other functions.
   """
   def init(opts) do
-    req_headers = case Keyword.get(opts, :req_headers, ["request-id", "x-request-id"]) do
-      v when is_list(v) -> v
-      v when is_binary(v) -> [v]
-    end
+    req_headers = case Keyword.get(opts, :req_headers, @default_headers) do
+        v when is_list(v) -> v
+        v when is_binary(v) -> [v]
+      end
 
-    %{req_headers: req_headers,
-      res_header:  Keyword.get(opts, :res_header, "request-id")}
+    [req_headers: req_headers,
+     res_header:  Keyword.get(opts, :res_header, "request-id")]
   end
 
   @doc """
@@ -27,14 +29,12 @@ defmodule Plexy.RequestId do
   """
   def call(conn, config) do
     conn
-    |> get_request_ids(Map.get(config, :req_headers))
-    |> set_request_ids(Map.get(config, :res_header))
+    |> get_request_ids(Keyword.get(config, :req_headers))
+    |> set_request_ids(Keyword.get(config, :res_header))
   end
 
-  @doc """
-  Reads the given headers for request ids, turns them into a list of binaries,
-  and prepends the new request id
-  """
+  # Reads the given headers for request ids, turns them into a list of binaries,
+  # and prepends the new request id
   defp get_request_ids(conn, req_headers) do
     ids = Enum.reduce(req_headers, [], fn(header, acc) ->
       case get_request_id(conn, header) do
@@ -45,22 +45,21 @@ defmodule Plexy.RequestId do
     {conn, [UUID.uuid4() | ids]}
   end
 
-  @doc """
-  Gets a list of request ids for a single header.
-  """
+  # Gets a list of request ids for a single header.
   defp get_request_id(conn, header) do
-    Conn.get_req_header(conn, header)
+    conn
+    |> Conn.get_req_header(header)
     |> Enum.flat_map(&String.split(&1, ","))
   end
 
-  @doc """
-  Sets the request ids as the res_header, and adds it to conn.assigns
-  """
+  # Sets the request ids as the res_header, and adds it to conn.assigns
   defp set_request_ids({conn, request_ids}, header) do
     string = Enum.join(request_ids, ",")
     conn = Conn.put_resp_header(conn, header, string)
-    assigns = Map.put(conn.assigns, :request_id, hd(request_ids))
-              |> Map.put(:request_ids, request_ids)
+    assigns =
+      conn.assigns
+      |> Map.put(:request_id, hd(request_ids))
+      |> Map.put(:request_ids, request_ids)
     %{conn | assigns: assigns}
   end
 end
