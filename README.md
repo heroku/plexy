@@ -25,7 +25,7 @@ Notably, Plexy is not a framework or a set of code generators. You can use Plexy
       use Plug.Router
 
       plug Plexy.RequestId
-      plug Instrumentor
+      plug Plexy.Instrumentor
       plug :match
       plug :dispatch
     end
