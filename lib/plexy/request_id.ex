@@ -19,8 +19,8 @@ defmodule Plexy.RequestId do
         v when is_binary(v) -> [v]
       end
 
-    %{req_headers: req_headers,
-      res_header:  Keyword.get(opts, :res_header, "request-id")}
+    [req_headers: req_headers,
+     res_header:  Keyword.get(opts, :res_header, "request-id")]
   end
 
   @doc """
@@ -29,8 +29,8 @@ defmodule Plexy.RequestId do
   """
   def call(conn, config) do
     conn
-    |> get_request_ids(Map.get(config, :req_headers))
-    |> set_request_ids(Map.get(config, :res_header))
+    |> get_request_ids(Keyword.get(config, :req_headers))
+    |> set_request_ids(Keyword.get(config, :res_header))
   end
 
   # Reads the given headers for request ids, turns them into a list of binaries,

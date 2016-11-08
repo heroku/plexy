@@ -6,16 +6,16 @@ defmodule Plexy.RequestIdTest do
   test "init has default config" do
     config = RequestId.init([])
 
-    assert config.req_headers == ["request-id", "x-request-id"]
-    assert config.res_header == "request-id"
+    assert Keyword.get(config, :req_headers) == ["request-id", "x-request-id"]
+    assert Keyword.get(config, :res_header) == "request-id"
   end
 
   test "init allows config" do
     config = RequestId.init(req_headers: ["my-foo-header"],
                             res_header: "foobar-header")
 
-    assert config.req_headers == ["my-foo-header"]
-    assert config.res_header == "foobar-header"
+    assert Keyword.get(config, :req_headers) == ["my-foo-header"]
+    assert Keyword.get(config, :res_header) == "foobar-header"
   end
 
   test "adds a request id header when none exists" do

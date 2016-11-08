@@ -4,8 +4,8 @@ defmodule Plexy.Instrumentor do
   instrumentation at=start method=get path=/apps
   instrumentation at=finish method=get path=/apps elapsed=100 status=200
   """
-  require Logger
   alias Plug.Conn
+  alias Plexy.Logger
   @behaviour Plug
 
   @doc """
@@ -26,23 +26,19 @@ defmodule Plexy.Instrumentor do
       path:            conn.request_path,
     ]
 
-    log(level, Keyword.put(context, :at, "start"))
+    Logger.log(level, Keyword.put(context, :at, "start"))
 
-    start = System.monotonic_time()
+    start = :erlang.monotonic_time()
 
     Conn.register_before_send(conn, fn conn ->
-      stop = System.monotonic_time()
-      diff = System.convert_time_unit(stop - start, :native, :milli_seconds)
-      log(level, [
+      stop = :erlang.monotonic_time()
+      diff = :erlang.convert_time_unit(stop - start, :native, :milli_seconds)
+      Logger.log(level, [
         at:      "finish",
         elapsed: diff,
         status:  conn.status
       ])
       conn
     end)
-  end
-
-  def log(level, msg) do
-    Logger.log(level, inspect(msg))
   end
 end
