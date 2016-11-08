@@ -12,7 +12,7 @@ defmodule Plexy.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :cowboy, :plug]]
+    [applications: [:logger]]
   end
 
   defp deps do
