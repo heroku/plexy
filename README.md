@@ -39,7 +39,7 @@ Notably, Plexy is not a framework or a set of code generators. You can use Plexy
 
 ## Usage
 
-Import the plugs into your Plug router or your Phoenix router pipeline as necessary. You can also import the plugs into your own plugs.
+Import the plugs into your Plug router or your Phoenix router pipeline as necessary. You can also import the plugs into your own plugs, as needed.
 
 ## Concepts
 
@@ -73,7 +73,7 @@ You do not need to worry about converting this hash into a string correctly. `Pl
 
 Request IDs are a unique identifier associated with every single request your Plexy app receives. Importing the `Plexy.RequestId` plug will append the request ID to the connection and also make it available in the Logger metadata.
 
-Request IDs are read on the request coming in to the app, so if you are on a platform like Heroku that adds Request ID headers, Plexy can read the existing Request ID(s) and append its own Request ID to the list. By default, it reads out of the `Request-Id` and the `X-Request-Id` header for incoming requests, but you can configure this list by setting `req_headers` in `Config`.
+Request IDs are read on the request coming in to the app, so if you are on a platform like Heroku that adds Request ID headers, Plexy can read the existing Request ID(s) and append its own Request ID to the list. By default, it reads out of the the list of headers `["Request-Id", "X-Request-Id"]` for incoming requests, but you can configure this list by setting `req_headers` in `Config`.
 
 Similarly, it defaults to setting a `Request-Id` header on the response so that you can easily trace requests. To customize this header, set `res_header` in `Config`.
 
