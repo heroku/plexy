@@ -42,7 +42,7 @@ defmodule Plexy.RequestId do
         headers -> acc ++ headers
       end
     end)
-    {conn, [UUID.uuid1() | ids]}
+    {conn, [UUID.uuid4() | ids]}
   end
 
   # Gets a list of request ids for a single header.
