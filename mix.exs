@@ -20,8 +20,7 @@ defmodule Plexy.Mixfile do
       {:uuid, "~> 1.1"},
       {:plug, "~> 1.0"},
       {:credo, "~> 0.4", only: [:dev, :test]},
-      {:dialyxir, "~> 0.4", only: [:dev]},
-      {:cowboy, "~> 1.0"}
+      {:dialyxir, "~> 0.4", only: [:dev]}
     ]
   end
 
