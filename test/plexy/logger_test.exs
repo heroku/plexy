@@ -38,6 +38,28 @@ defmodule Plexy.LoggerTest do
   end
 
   test "logs time elapsed for given code block" do
-    # TODO: Figure out way to mock :timer.tc?
+    logged = capture_log(fn ->
+      Logger.measure(:sleeping, fn ->
+        :timer.sleep(100)
+      end)
+    end)
+
+    assert logged =~ "measure#plexy.sleeping=1.0"
+  end
+
+  test "redacts configured keys" do
+    logged = capture_log(fn ->
+      Logger.debug(password: "mystuff")
+    end)
+
+    assert logged =~ "password=REDACTED"
+  end
+
+  test "filters configured keys" do
+    logged = capture_log(fn ->
+      Logger.debug(secret: "mystuff")
+    end)
+
+    refute logged =~ "secret"
   end
 end
