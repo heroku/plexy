@@ -54,7 +54,7 @@ defmodule Plexy.Logger do
   """
   def measure(metric, fun) do
     {time, result} = :timer.tc(fun)
-    debug(%{metric_name(metric, :measure) => time / 0.001})
+    debug(%{metric_name(metric, :measure) => time / 1000.0})
     result
   end
 

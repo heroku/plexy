@@ -30,6 +30,7 @@ defmodule Plexy.RequestId do
   def call(conn, config) do
     conn
     |> get_request_ids(Keyword.get(config, :req_headers))
+    |> set_request_id_on_logger
     |> set_request_ids(Keyword.get(config, :res_header))
   end
 
@@ -61,5 +62,10 @@ defmodule Plexy.RequestId do
       |> Map.put(:request_id, hd(request_ids))
       |> Map.put(:request_ids, request_ids)
     %{conn | assigns: assigns}
+  end
+
+  defp set_request_id_on_logger({conn, request_ids}) do
+    Logger.metadata(request_id: List.first(request_ids))
+    {conn, request_ids}
   end
 end
