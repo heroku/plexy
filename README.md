@@ -102,9 +102,24 @@ Plexy provides some helper functions for taking metric measurements and outputti
 
 ### Configuring logging
 
+You may need to configure your logging slightly differently, but in general, this pattern will help you create l2met-compatible loglines with UTC times and the Request ID on each line. In `config/config.exs`:
+
+```elixir
+config :logger,
+  utc_log: true
+
+config :logger, :console,
+  format: "$time $metadata $message\n",
+  metadata: [:request_id]
+```
+
+Make sure that the `Plexy.RequestId` plug is included in your Elixir app per the Installation instructions, and you will have the `request_id` in the log metadata.
+
 ### Configuring exception reporting
 
+We recommend [Rollbax](https://github.com/elixir-addicts/rollbax) as it lives in your logging backends pipeline. This means that the params retracted in the logging pipeline by your log transformer.
 
+- [ ] TODO @mathias: Plexy will provide a params retractor log transformer, document it here.
 
 ## License
 
