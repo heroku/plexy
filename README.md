@@ -125,7 +125,7 @@ A common pain point for production systems can be inadvertant leaks of secrets t
 
 To use it, add this to `config/config.exs`:
 
-``elixir
+```elixir
  config :plexy, :logger,
    redactors: [
      {Plexy.Logger.SimpleRedactor, [
