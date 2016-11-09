@@ -146,7 +146,6 @@ iex> SimpleRedactor.run("password=mysecred", filter: ["password"])
 {:cont, ""}
 ```
 
-
 ## License
 
 Created at Heroku by:
