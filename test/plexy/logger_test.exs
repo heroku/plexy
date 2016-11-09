@@ -1,5 +1,5 @@
 defmodule Plexy.LoggerTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias Plexy.Logger
   import ExUnit.CaptureLog
@@ -21,6 +21,14 @@ defmodule Plexy.LoggerTest do
     assert logged =~ "foo=bar"
   end
 
+  test "logs strings with spaces inside of quotes" do
+    logged = capture_log(fn ->
+      Logger.debug(foo: "bar baz")
+    end)
+
+    assert logged =~ "foo=\"bar baz\""
+  end
+
   test "logs counts for a given metric" do
     logged = capture_log(fn ->
       Logger.count(:foo, 1)
@@ -30,6 +38,28 @@ defmodule Plexy.LoggerTest do
   end
 
   test "logs time elapsed for given code block" do
-    # TODO: Figure out way to mock :timer.tc?
+    logged = capture_log(fn ->
+      Logger.measure(:sleeping, fn ->
+        :timer.sleep(100)
+      end)
+    end)
+
+    assert logged =~ "measure#plexy.sleeping=1.0"
+  end
+
+  test "redacts configured keys" do
+    logged = capture_log(fn ->
+      Logger.debug(password: "mystuff")
+    end)
+
+    assert logged =~ "password=REDACTED"
+  end
+
+  test "filters configured keys" do
+    logged = capture_log(fn ->
+      Logger.debug(secret: "mystuff")
+    end)
+
+    refute logged =~ "secret"
   end
 end
