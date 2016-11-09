@@ -21,6 +21,14 @@ defmodule Plexy.LoggerTest do
     assert logged =~ "foo=bar"
   end
 
+  test "logs strings with spaces inside of quotes" do
+    logged = capture_log(fn ->
+      Logger.debug(foo: "bar baz")
+    end)
+
+    assert logged =~ "foo=\"bar baz\""
+  end
+
   test "logs counts for a given metric" do
     logged = capture_log(fn ->
       Logger.count(:foo, 1)

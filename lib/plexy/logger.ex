@@ -118,12 +118,12 @@ defmodule Plexy.Logger do
   def log(level, chardata_or_fn, metadata), do: Logger.log(level, chardata_or_fn, metadata)
 
   defp metric_name(metric, name) when is_atom(metric) do
-    metric |> Atom.to_string |> metric_name(name)
+    metric |> to_string |> metric_name(name)
   end
 
   defp metric_name(metric, name) do
     app = System.get_env("APP_NAME") || "plexy"
-    name = Atom.to_string(name)
+    name = to_string(name)
     "#{name}##{app}.#{metric}"
   end
 
@@ -134,11 +134,15 @@ defmodule Plexy.Logger do
   end
 
   defp pair_to_segment({k, v}, acc) when is_atom(k) do
-    pair_to_segment({Atom.to_string(k), v}, acc)
+    pair_to_segment({to_string(k), v}, acc)
   end
 
-  defp pair_to_segment({k, v}, acc) when is_binary(v) or is_number(v) do
-    "#{acc}#{k}=#{v} "
+  defp pair_to_segment({k, v}, acc) when is_binary(v) do
+    if String.contains?(v, " ") do
+      "#{acc}#{k}=#{inspect(v)} "
+    else
+      "#{acc}#{k}=#{v} "
+    end
   end
 
   defp pair_to_segment({k, v}, acc) do
