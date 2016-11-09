@@ -67,7 +67,7 @@ becomes
 21:02:24.882 request_id=fc06cbd2-b8b6-4257-801d-89253ed83962  test=true foo=bar
 ```
 
-You do not need to worry about converting this hash into a string correctly. `Plexy.Logger` has you covered!
+You can pass in maps, structs and keyword lists to `Plexy.Logger` methods, and it will log them correctly without asking you to worry about converting them to strings.
 
 ### Request IDs
 
