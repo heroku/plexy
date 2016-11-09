@@ -11,8 +11,8 @@ defmodule Plexy.Logger.SimpleRedactor do
 
   ## Examples
 
-      iex> SimpleRedactor.run("username=bob", redact: ["username"])
-      {:cont, "username=REDACTED"}
+      iex> SimpleRedactor.run("username=bob age=21", redact: ["username"])
+      {:cont, "username=REDACTED age=21"}
       iex> SimpleRedactor.run("password=mysecred", filter: ["password"])
       {:cont, ""}
   """
@@ -26,10 +26,11 @@ defmodule Plexy.Logger.SimpleRedactor do
   defp redact(line, []), do: {:cont, line}
   defp redact(line, keys) do
     redacted = Enum.reduce(keys, line, fn (k, l) ->
-      "#{k}=\"?[^\"]+\"?\s?"
-      |> Regex.compile
-      |> elem(1)
-      |> Regex.replace(l, "#{k}=REDACTED")
+      with {:ok, quoted}  <- Regex.compile("#{k}=\"[^\"]+\"(\s?)"),
+           {:ok, nquoted} <- Regex.compile("#{k}=[^\s]+(\s?)") do
+        quoted_redacted = Regex.replace(quoted, l, "#{k}=REDACTED\\1")
+        Regex.replace(nquoted, quoted_redacted, "#{k}=REDACTED\\1")
+      end
     end)
     {:cont, redacted}
   end
