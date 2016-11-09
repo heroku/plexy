@@ -67,7 +67,7 @@ becomes
 21:02:24.882 request_id=fc06cbd2-b8b6-4257-801d-89253ed83962  test=true foo=bar
 ```
 
-You do not need to worry about converting this hash into a string correctly. `Plexy.Logger` has you covered!
+You can pass in maps, structs and keyword lists to `Plexy.Logger` methods, and it will log them correctly without asking you to worry about converting them to strings.
 
 ### Request IDs
 
@@ -102,9 +102,49 @@ Plexy provides some helper functions for taking metric measurements and outputti
 
 ### Configuring logging
 
+You may need to configure your logging slightly differently, but in general, this pattern will help you create l2met-compatible loglines with UTC times and the Request ID on each line. In `config/config.exs`:
+
+```elixir
+config :logger,
+  utc_log: true
+
+config :logger, :console,
+  format: "$time $metadata $message\n",
+  metadata: [:request_id]
+```
+
+Make sure that the `Plexy.RequestId` plug is included in your Elixir app per the Installation instructions, and you will have the `request_id` in the log metadata.
+
 ### Configuring exception reporting
 
+We recommend [Rollbax](https://github.com/elixir-addicts/rollbax) as it lives in your logging backends pipeline. This means that the params retracted in the logging pipeline by your log transformer or Plexy Redactor pipeline. To redact certain keys from your Rollbar reporting, see the next section.
 
+### Protecting secrets from appearing in logs or Rollbar
+
+A common pain point for production systems can be inadvertant leaks of secrets to log lines or to exception reporters like Rollbar. While each app will have different values that it considers secret, and how much about a customer or end-user can be logged will depend on the industry, we have provided a generic way to redact certain keys from appearing in logs or being passed through the logging backend pipeline to Rollbax.
+
+To use it, add this to `config/config.exs`:
+
+```elixir
+ config :plexy, :logger,
+   redactors: [
+     {Plexy.Logger.SimpleRedactor, [
+       redact: ["username"],
+       filter: ["password"]
+     ]}
+   ]
+```
+
+You can also write your own Redactor module and configure it here. The Redactor runs before the data is passed to each logging backend in `Plexy.Logger`.
+
+Keys that appear in the `redact` list will appear with the value `REDACTED` in logs. Keys that appear in the filter list will cause the entire logline to be redacted from the record. Examples:
+
+```
+iex> SimpleRedactor.run("username=bob", redact: ["username"])
+{:cont, "username=REDACTED"}
+iex> SimpleRedactor.run("password=mysecred", filter: ["password"])
+{:cont, ""}
+```
 
 ## License
 
