@@ -44,7 +44,7 @@ defmodule Plexy.LoggerTest do
       end)
     end)
 
-    assert logged =~ "measure#plexy.sleeping=1.0"
+    assert logged =~ "measure#plexy.sleeping=1"
   end
 
   test "redacts configured keys" do
