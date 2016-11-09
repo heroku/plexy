@@ -117,7 +117,7 @@ Make sure that the `Plexy.RequestId` plug is included in your Elixir app per the
 
 ### Configuring exception reporting
 
-We recommend [Rollbax](https://github.com/elixir-addicts/rollbax) as it lives in your logging backends pipeline. This means that the params retracted in the logging pipeline by your log transformer. To redact certain keys from your Rollbar reporting, see the next section.
+We recommend [Rollbax](https://github.com/elixir-addicts/rollbax) as it lives in your logging backends pipeline. This means that the params retracted in the logging pipeline by your log transformer or Plexy Redactor pipeline. To redact certain keys from your Rollbar reporting, see the next section.
 
 ### Protecting secrets from appearing in logs or Rollbar
 
@@ -135,7 +135,7 @@ To use it, add this to `config/config.exs`:
    ]
 ```
 
-You can also write your own Redactor module and configure it here. The Redactor runs as the logging transformer before the data is passed to each logging backend.
+You can also write your own Redactor module and configure it here. The Redactor runs before the data is passed to each logging backend in `Plexy.Logger`.
 
 Keys that appear in the `redact` list will appear with the value `REDACTED` in logs. Keys that appear in the filter list will cause the entire logline to be redacted from the record. Examples:
 
