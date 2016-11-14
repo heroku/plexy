@@ -117,7 +117,7 @@ Make sure that the `Plexy.RequestId` plug is included in your Elixir app per the
 
 ### Configuring exception reporting
 
-We recommend [Rollbax](https://github.com/elixir-addicts/rollbax) as it lives in your logging backends pipeline. This means that the params retracted in the logging pipeline by your log transformer or Plexy Redactor pipeline. To redact certain keys from your Rollbar reporting, see the next section.
+We recommend [Rollbax](https://github.com/elixir-addicts/rollbax) as it lives in your logging backends pipeline. This means that the params retracted by the Plexy Redactor won't ever show up in Rollbar. To hide certain keys from your Rollbar reporting, see the next section.
 
 ### Protecting secrets from appearing in logs or Rollbar
 
