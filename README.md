@@ -10,32 +10,32 @@ Notably, Plexy is not a framework or a set of code generators. You can use Plexy
 
 ## Installation
 
-  1. Add `plexy` to your list of dependencies in `mix.exs`:
+1. Add `plexy` to your list of dependencies in `mix.exs`:
 
-    ```elixir
-    def deps do
-      [{:plexy, "~> 0.1.0"}]
-    end
-    ```
+```elixir
+def deps do
+  [{:plexy, "~> 0.1.0"}]
+end
+```
 
-  2. Require Plexy plugs in your application:
+2. Require Plexy plugs in your application:
 
-    ```elixir
-    defmodule MyRouter do
-      use Plug.Router
+```elixir
+defmodule MyRouter do
+  use Plug.Router
 
-      plug Plexy.RequestId
-      plug Plexy.Instrumentor
-      plug :match
-      plug :dispatch
-    end
-    ```
+  plug Plexy.RequestId
+  plug Plexy.Instrumentor
+  plug :match
+  plug :dispatch
+end
+```
 
-  3. Call the `Plexy.Logger` wherever you wish to log information:
+3. Call the `Plexy.Logger` wherever you wish to log information:
 
-    ```elixir
-    Plexy.Logger.count(:http_clients_404, 1)
-    ```
+```elixir
+Plexy.Logger.count(:http_clients_404, 1)
+```
 
 ## Usage
 
@@ -57,7 +57,7 @@ This is known as an [`l2met`](https://github.com/ryandotsmith/l2met) compatible 
 
 To output arbitrary data to the log, you can pass a hash to `Plexy.Logger` and it will format it correctly. For example:
 
-```
+```elixir
 Plexy.Logger.info(test: true, foo: "bar")
 ```
 
@@ -139,7 +139,7 @@ You can also write your own Redactor module and configure it here. The Redactor 
 
 Keys that appear in the `redact` list will appear with the value `REDACTED` in logs. Keys that appear in the filter list will cause the entire logline to be redacted from the record. Examples:
 
-```
+```elixir
 iex> SimpleRedactor.run("username=bob", redact: ["username"])
 {:cont, "username=REDACTED"}
 iex> SimpleRedactor.run("password=mysecred", filter: ["password"])
@@ -150,10 +150,10 @@ iex> SimpleRedactor.run("password=mysecred", filter: ["password"])
 
 Created at Heroku by:
 
-- @Adovenmuehle
-- @blackfist
-- @joshwlewis
-- @kennyp
-- @mathias
+- [@Adovenmuehle](https://github.com/Adovenmuehle)
+- [@blackfist](https://github.com/blackfist)
+- [@joshwlewis](https://github.com/joshlewis)
+- [@kennyp](https://github.com/kennyp)
+- [@mathias](https://github.com/mathias)
 
 Released under the MIT license.
