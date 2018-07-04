@@ -38,8 +38,9 @@ defmodule Plexy.Logger do
 
       Plexy.Logger.count(:signup, 2)
       Plexy.Logger.count("registration", 1)
+      Plexy.Logger.count("registration") # same as above
   """
-  def count(metric, count) do
+  def count(metric, count \\ 1) do
     debug(%{metric_name(metric, :count) => count})
   end
 

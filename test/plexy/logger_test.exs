@@ -37,6 +37,14 @@ defmodule Plexy.LoggerTest do
     assert logged =~ "count#plexy.foo=1"
   end
 
+  test "logs counts for a given metric, assuming the count is one" do
+    logged = capture_log(fn ->
+      Logger.count(:foo)
+    end)
+
+    assert logged =~ "count#plexy.foo=1"
+  end
+
   test "logs time elapsed for given code block" do
     logged = capture_log(fn ->
       Logger.measure(:sleeping, fn ->
