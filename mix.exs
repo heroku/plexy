@@ -8,7 +8,23 @@ defmodule Plexy.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps(),
+     package: package(),
      dialyzer: dialyzer()]
+  end
+
+  def package do
+    [
+      description: "Interagent-compatible web services in Elixir, inspired by Pliny",
+      licenses: ["MIT"],
+      maintainers: [
+        "@Adovenmuehle",
+        "@blackfist",
+        "@joshlewis",
+        "@kennyp",
+        "@mathias"
+      ],
+      links: %{"GitHub" => "https://github.com/heroku/plexy"}
+    ]
   end
 
   def application do
