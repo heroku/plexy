@@ -49,8 +49,8 @@ defmodule Plexy.Logger do
 
   ## Examples
 
-      Plexy.Logger.count(:call_core, &super_slow_call/0)
-      Plexy.Logger.count("rebuild", fn -> rebuild_the_invoice end)
+      Plexy.Logger.measure(:call_core, &super_slow_call/0)
+      Plexy.Logger.measure("rebuild", fn -> rebuild_the_invoice end)
   """
   def measure(metric, fun) do
     {time, result} = :timer.tc(fun)
