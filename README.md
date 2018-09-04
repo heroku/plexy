@@ -152,7 +152,7 @@ Created at Heroku by:
 
 - [@Adovenmuehle](https://github.com/Adovenmuehle)
 - [@blackfist](https://github.com/blackfist)
-- [@joshwlewis](https://github.com/joshlewis)
+- [@joshwlewis](https://github.com/joshwlewis)
 - [@kennyp](https://github.com/kennyp)
 - [@mathias](https://github.com/mathias)
 
