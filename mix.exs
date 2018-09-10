@@ -2,14 +2,16 @@ defmodule Plexy.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :plexy,
-     version: "0.1.1",
-     elixir: "~> 1.3",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps(),
-     package: package(),
-     dialyzer: dialyzer()]
+    [
+      app: :plexy,
+      version: "0.1.2",
+      elixir: "~> 1.3",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps(),
+      package: package(),
+      dialyzer: dialyzer()
+    ]
   end
 
   def package do
