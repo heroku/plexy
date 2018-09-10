@@ -10,34 +10,40 @@ defmodule Plexy.InstrumentorTest do
   end
 
   test "Instrumentor.init/1 allows level to be specified" do
-    level = Instrumentor.init([log: :debug])
+    level = Instrumentor.init(log: :debug)
     assert level == :debug
   end
 
   @opts Instrumentor.init([])
   test "Instrumentor.call/2 logs the start" do
-    logged = capture_log(fn ->
-      conn(:get, "/foobar") |> Instrumentor.call(@opts)
-    end)
+    logged =
+      capture_log(fn ->
+        conn(:get, "/foobar") |> Instrumentor.call(@opts)
+      end)
 
-    assert logged =~ "instrumentation"
-    assert logged =~ "start"
-    assert logged =~ "path"
-    assert logged =~ "method"
+    [start_log_line | _finish_log_line] = String.split(logged, "\n")
+
+    assert start_log_line =~ "instrumentation"
+    assert start_log_line =~ "start"
+    assert start_log_line =~ "path"
+    assert start_log_line =~ "method"
   end
 
   test "Instrumentor.call/2 logs the finish" do
-    logged = capture_log(fn ->
-      conn(:get, "/foobar")
-      |> Instrumentor.call(@opts)
-      |> Plug.Conn.send_resp(200, "wow")
-    end)
+    logged =
+      capture_log(fn ->
+        conn(:get, "/foobar")
+        |> Instrumentor.call(@opts)
+        |> Plug.Conn.send_resp(200, "wow")
+      end)
 
-    assert logged =~ "instrumentation"
-    assert logged =~ "finish"
-    assert logged =~ "elapsed"
-    assert logged =~ "status"
-    assert logged =~ "path"
-    assert logged =~ "method"
+    [_start_log_line, finish_log_line | _empty_list] = String.split(logged, "\n")
+
+    assert finish_log_line =~ "instrumentation"
+    assert finish_log_line =~ "finish"
+    assert finish_log_line =~ "elapsed"
+    assert finish_log_line =~ "status"
+    assert finish_log_line =~ "path"
+    assert finish_log_line =~ "method"
   end
 end

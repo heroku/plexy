@@ -22,22 +22,27 @@ defmodule Plexy.Instrumentor do
   def call(conn, level) do
     context = [
       instrumentation: true,
-      method:          conn.method,
-      path:            conn.request_path,
+      method: conn.method,
+      path: conn.request_path
     ]
 
-    Logger.log(level, Keyword.put(context, :at, "start"))
+    Logger.log(level, Keyword.merge(context, at: "start"))
 
     start = :erlang.monotonic_time()
 
     Conn.register_before_send(conn, fn conn ->
       stop = :erlang.monotonic_time()
       diff = :erlang.convert_time_unit(stop - start, :native, :milli_seconds)
-      Logger.log(level, [
-        at:      "finish",
-        elapsed: diff,
-        status:  conn.status
-      ])
+
+      Logger.log(
+        level,
+        Keyword.merge(context,
+          at: "finish",
+          elapsed: diff,
+          status: conn.status
+        )
+      )
+
       conn
     end)
   end
