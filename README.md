@@ -84,7 +84,7 @@ By default, Plexy will instrument each request and output the timing information
 ```
 21:02:24.882 request_id=fc06cbd2-b8b6-4257-801d-89253ed83962  at=start instrumentation=true method=GET path=/hello
 21:02:24.884 request_id=fc06cbd2-b8b6-4257-801d-89253ed83962  <metrics>
-21:02:24.884 request_id=fc06cbd2-b8b6-4257-801d-89253ed83962  at=finish elapsed=1.387 status=200
+21:02:24.884 request_id=fc06cbd2-b8b6-4257-801d-89253ed83962  at=finish instrumentation=true method=GET path=/hello elapsed=1.387 status=200
 ```
 
 ### Metrics
