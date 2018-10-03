@@ -25,6 +25,7 @@ defmodule Plexy.Logger do
       case datum_or_fn do
         datum when is_list(datum) or is_map(datum) ->
           Logger.unquote(name)(fn -> list_to_line(datum) end, metadata)
+
         datum ->
           Logger.unquote(name)(fn -> redact(datum) end, metadata)
       end
@@ -65,9 +66,11 @@ defmodule Plexy.Logger do
   at compile time.
   """
   def log(level, datum_or_fn, metadata \\ [])
+
   def log(level, datum, metadata) when is_list(datum) or is_map(datum) do
     log(level, fn -> list_to_line(datum) end, metadata)
   end
+
   def log(level, chardata_or_fn, metadata), do: Logger.log(level, chardata_or_fn, metadata)
 
   defp metric_name(metric, name) when is_atom(metric) do
@@ -91,7 +94,7 @@ defmodule Plexy.Logger do
     :plexy
     |> Application.get_env(:logger, [])
     |> Keyword.get(:redactors, [])
-    |> Enum.reduce_while(line, fn ({redactor, opts}, l) ->
+    |> Enum.reduce_while(line, fn {redactor, opts}, l ->
       redactor.run(l, opts)
     end)
   end
