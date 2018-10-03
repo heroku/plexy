@@ -46,6 +46,17 @@ defmodule Plexy.Logger do
   end
 
   @doc """
+  Logs a debug message and tags it as `metric`.
+
+  ## Examples
+
+      Plexy.Logger.measure(:request, 200)
+  """
+  def measure(metric, time) when is_number(time) do
+    debug(%{metric_name(metric, :measure) => time})
+  end
+
+  @doc """
   Logs a debug message the amount of time in milliseconds required to run
   the given function and tags it as `metric`.
 
@@ -56,7 +67,7 @@ defmodule Plexy.Logger do
   """
   def measure(metric, fun) do
     {time, result} = :timer.tc(fun)
-    debug(%{metric_name(metric, :measure) => time / 1000.0})
+    measure(metric, time / 1000.0)
     result
   end
 
