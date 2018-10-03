@@ -14,13 +14,13 @@ defmodule Plexy.RequestId do
   :req_headers and :res_headers for use by the other functions.
   """
   def init(opts) do
-    req_headers = case Keyword.get(opts, :req_headers, @default_headers) do
+    req_headers =
+      case Keyword.get(opts, :req_headers, @default_headers) do
         v when is_list(v) -> v
         v when is_binary(v) -> [v]
       end
 
-    [req_headers: req_headers,
-     res_header:  Keyword.get(opts, :res_header, "request-id")]
+    [req_headers: req_headers, res_header: Keyword.get(opts, :res_header, "request-id")]
   end
 
   @doc """
@@ -37,12 +37,14 @@ defmodule Plexy.RequestId do
   # Reads the given headers for request ids, turns them into a list of binaries,
   # and prepends the new request id
   defp get_request_ids(conn, req_headers) do
-    ids = Enum.reduce(req_headers, [], fn(header, acc) ->
-      case get_request_id(conn, header) do
-        []      -> acc
-        headers -> acc ++ headers
-      end
-    end)
+    ids =
+      Enum.reduce(req_headers, [], fn header, acc ->
+        case get_request_id(conn, header) do
+          [] -> acc
+          headers -> acc ++ headers
+        end
+      end)
+
     {conn, [UUID.uuid4() | ids]}
   end
 
@@ -57,10 +59,12 @@ defmodule Plexy.RequestId do
   defp set_request_ids({conn, request_ids}, header) do
     string = Enum.join(request_ids, ",")
     conn = Conn.put_resp_header(conn, header, string)
+
     assigns =
       conn.assigns
       |> Map.put(:request_id, hd(request_ids))
       |> Map.put(:request_ids, request_ids)
+
     %{conn | assigns: assigns}
   end
 

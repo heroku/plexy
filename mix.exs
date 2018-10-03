@@ -23,6 +23,7 @@ defmodule Plexy.Mixfile do
         "@blackfist",
         "@joshlewis",
         "@kennyp",
+        "@mwoods79",
         "@mathias"
       ],
       links: %{"GitHub" => "https://github.com/heroku/plexy"}
