@@ -25,19 +25,18 @@ defmodule Plexy.InstrumentorTest do
 
     [start_log_line, measure_log_line, finish_log_line | _empty_list] = String.split(logged, "\n")
 
-    assert start_log_line =~ "instrumentation"
-    assert start_log_line =~ "start"
-    assert start_log_line =~ "path"
-    assert start_log_line =~ "method"
+    assert start_log_line =~ "instrumentation=true"
+    assert start_log_line =~ "at=start"
+    assert start_log_line =~ "path=/foobar"
+    assert start_log_line =~ "method=GET"
 
-    assert measure_log_line =~ "measure"
-    assert measure_log_line =~ "request.latency.ms"
+    assert measure_log_line =~ "measure#plexy.request.latency.ms"
 
-    assert finish_log_line =~ "instrumentation"
-    assert finish_log_line =~ "finish"
+    assert finish_log_line =~ "instrumentation=true"
+    assert finish_log_line =~ "at=finish"
+    assert finish_log_line =~ "path=/foobar"
+    assert finish_log_line =~ "method=GET"
+    assert finish_log_line =~ "status=200"
     assert finish_log_line =~ "elapsed"
-    assert finish_log_line =~ "status"
-    assert finish_log_line =~ "path"
-    assert finish_log_line =~ "method"
   end
 end
