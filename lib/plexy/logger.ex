@@ -89,7 +89,7 @@ defmodule Plexy.Logger do
   end
 
   defp metric_name(metric, name) do
-    app = System.get_env("APP_NAME") || "plexy"
+    app = Plexy.Config.get(:plexy, :app_name, System.get_env("APP_NAME") || "plexy")
     name = to_string(name)
     "#{name}##{app}.#{metric}"
   end
