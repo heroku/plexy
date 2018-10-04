@@ -97,8 +97,9 @@ Plexy provides some helper functions for taking metric measurements and outputti
 
 #### Measures
 
-`Plexy.Logger.measure(metric_name, func)` will measure the amount of time in milliseconds required to run the given function and logs it as the given metric name.
+`Plexy.Logger.measure(metric_name, 123)` expects a time in milliseconds and logs it as the given metric name.
 
+`Plexy.Logger.measure(metric_name, func)` will measure the amount of time in milliseconds required to run the given function and logs it as the given metric name. This also returns the value of the given function.
 
 ### Configuring logging
 
@@ -114,6 +115,38 @@ config :logger, :console,
 ```
 
 Make sure that the `Plexy.RequestId` plug is included in your Elixir app per the Installation instructions, and you will have the `request_id` in the log metadata.
+
+By default Plexy looks for an ENV variable named `APP_NAME` and will then fall back to `plexy` if it is not provided. This value is used for metrics logging.
+
+```
+Plexy.Logger.measure(:fast, 123)
+# logs => measure#plexy.fast=123
+
+# APP_NAME env set to "my_app"
+Plexy.Logger.measure(:fast, 123)
+# logs => measure#my_app.fast=123
+```
+
+If you would like to use a different env var for the app name you can set it.
+
+```
+# config/config.exs
+config, :plexy,
+  app_name: {:system, "HEROKU_APP_NAME"}
+
+# HEROKU_APP_NAME env set to "much_amazing"
+Plexy.Logger.measure(:fast, 123)
+# logs => measure#much_amazing.fast=123
+
+# or with a default
+# config/config.exs
+config, :plexy,
+  app_name: {:system, "HEROKU_APP_NAME", "such_wow"}
+
+# HEROKU_APP_NAME env is not set
+Plexy.Logger.measure(:fast, 123)
+# logs => measure#such_wow.fast=123
+```
 
 ### Configuring exception reporting
 
