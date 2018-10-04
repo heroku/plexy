@@ -1,7 +1,7 @@
 defmodule Plexy.InstrumentorTest do
   alias Plexy.Instrumentor
   import ExUnit.CaptureLog
-  use ExUnit.Case, async: true
+  use ExUnit.Case
   use Plug.Test
 
   test "Instrumentor.init/1 defaults level to :info" do
