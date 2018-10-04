@@ -31,7 +31,7 @@ defmodule Plexy.InstrumentorTest do
     assert start_log_line =~ "method"
 
     assert measure_log_line =~ "measure"
-    assert measure_log_line =~ "request.latency.milliseconds"
+    assert measure_log_line =~ "request.latency.ms"
 
     assert finish_log_line =~ "instrumentation"
     assert finish_log_line =~ "finish"
