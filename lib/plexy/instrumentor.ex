@@ -34,6 +34,8 @@ defmodule Plexy.Instrumentor do
       stop = :erlang.monotonic_time()
       diff = :erlang.convert_time_unit(stop - start, :native, :milli_seconds)
 
+      Logger.measure("request.latency.ms", diff)
+
       Logger.log(
         level,
         Keyword.merge(context,
