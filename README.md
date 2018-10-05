@@ -99,7 +99,15 @@ Plexy provides some helper functions for taking metric measurements and outputti
 
 `Plexy.Logger.measure(metric_name, 123)` expects a time in milliseconds and logs it as the given metric name.
 
-`Plexy.Logger.measure(metric_name, func)` will measure the amount of time in milliseconds required to run the given function and logs it as the given metric name. This also returns the value of the given function.
+`Plexy.Logger.measure(metric_name, func)` will measure the amount of time in milliseconds required to run the given function and logs it as the given metric name. This also returns the value of the given function. It also adds `.ms` to the metric in case you forget.
+
+```
+Plexy.Logger.measure(:fast, func)
+# logs => measure#plexy.fast.ms=123
+
+Plexy.Logger.measure("fast.ms", func)
+# logs => measure#my_app.fast.ms=123
+```
 
 ### Configuring logging
 

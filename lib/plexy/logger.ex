@@ -67,7 +67,7 @@ defmodule Plexy.Logger do
   """
   def measure(metric, fun) do
     {time, result} = :timer.tc(fun)
-    measure(metric, time / 1000.0)
+    measure(add_ms_to_metric_name(metric), time / 1000.0)
     result
   end
 
@@ -83,6 +83,14 @@ defmodule Plexy.Logger do
   end
 
   def log(level, chardata_or_fn, metadata), do: Logger.log(level, chardata_or_fn, metadata)
+
+  defp add_ms_to_metric_name(metric) do
+    if metric |> to_string() |> String.ends_with?(".ms") do
+      metric
+    else
+      "#{metric}.ms"
+    end
+  end
 
   defp metric_name(metric, name) when is_atom(metric) do
     metric |> to_string |> metric_name(name)
