@@ -20,23 +20,33 @@ defmodule Plexy.InstrumentorTest do
       capture_log(fn ->
         conn(:get, "/foobar")
         |> Instrumentor.call(@opts)
-        |> Plug.Conn.send_resp(200, "wow")
+        |> Plug.Conn.send_resp(203, "wow")
       end)
 
-    [start_log_line, measure_log_line, finish_log_line | _empty_list] = String.split(logged, "\n")
+    [
+      start_log_line,
+      measure_log_line,
+      status_log_line,
+      status_class_log_line,
+      finish_log_line
+      | _anything_else
+    ] = String.split(logged, "\n")
 
     assert start_log_line =~ "instrumentation=true"
     assert start_log_line =~ "at=start"
     assert start_log_line =~ "path=/foobar"
     assert start_log_line =~ "method=GET"
 
-    assert measure_log_line =~ "measure#plexy.request.latency.ms"
+    assert measure_log_line =~ "measure#plexy.requests.latency.ms"
+
+    assert status_log_line =~ "count#plexy.requests.203"
+    assert status_class_log_line =~ "count#plexy.requests.2xx"
 
     assert finish_log_line =~ "instrumentation=true"
     assert finish_log_line =~ "at=finish"
     assert finish_log_line =~ "path=/foobar"
     assert finish_log_line =~ "method=GET"
-    assert finish_log_line =~ "status=200"
+    assert finish_log_line =~ "status=203"
     assert finish_log_line =~ "elapsed"
   end
 end
