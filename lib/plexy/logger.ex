@@ -33,7 +33,7 @@ defmodule Plexy.Logger do
   end
 
   @doc """
-  Logs a debug message with the given metric as a count
+  Logs a info message with the given metric as a count
 
   ## Examples
 
@@ -42,22 +42,22 @@ defmodule Plexy.Logger do
       Plexy.Logger.count("registration") # same as above
   """
   def count(metric, count \\ 1) do
-    debug(%{metric_name(metric, :count) => count})
+    info(%{metric_name(metric, :count) => count})
   end
 
   @doc """
-  Logs a debug message and tags it as `metric`.
+  Logs a info message and tags it as `metric`.
 
   ## Examples
 
       Plexy.Logger.measure(:request, 200)
   """
   def measure(metric, time) when is_number(time) do
-    debug(%{metric_name(metric, :measure) => time})
+    info(%{metric_name(metric, :measure) => time})
   end
 
   @doc """
-  Logs a debug message the amount of time in milliseconds required to run
+  Logs a info message the amount of time in milliseconds required to run
   the given function and tags it as `metric`.
 
   ## Examples
