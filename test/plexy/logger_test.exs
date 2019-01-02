@@ -79,12 +79,21 @@ defmodule Plexy.LoggerTest do
     refute logged =~ "secret"
   end
 
-  test "includes app name" do
+  test "includes fallback app name when none speficied" do
     logged =
       capture_log(fn ->
-        Logger.debug(mymessage: "mystuff")
+        Logger.debug(my_message: "mystuff")
       end)
 
     assert logged =~ "app=plexy"
+  end
+
+  test "includes app name, when provided" do
+    logged =
+      capture_log(fn ->
+        Logger.debug(my_message: "mystuff", app: "test-app-name")
+      end)
+
+    assert logged =~ "app=test-app-name"
   end
 end
