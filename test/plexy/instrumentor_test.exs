@@ -4,6 +4,8 @@ defmodule Plexy.InstrumentorTest do
   use ExUnit.Case
   use Plug.Test
 
+  @test_app_name "test-app-name"
+
   test "Instrumentor.init/1 defaults level to :info" do
     level = Instrumentor.init([])
     assert level == :info
@@ -37,10 +39,10 @@ defmodule Plexy.InstrumentorTest do
     assert start_log_line =~ "path=/foobar"
     assert start_log_line =~ "method=GET"
 
-    assert measure_log_line =~ "measure#plexy.requests.latency.ms"
+    assert measure_log_line =~ "measure##{@test_app_name}.requests.latency.ms"
 
-    assert status_log_line =~ "count#plexy.requests.203"
-    assert status_class_log_line =~ "count#plexy.requests.2xx"
+    assert status_log_line =~ "count##{@test_app_name}.requests.203"
+    assert status_class_log_line =~ "count##{@test_app_name}.requests.2xx"
 
     assert finish_log_line =~ "instrumentation=true"
     assert finish_log_line =~ "at=finish"

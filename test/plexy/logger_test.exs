@@ -4,6 +4,8 @@ defmodule Plexy.LoggerTest do
   alias Plexy.Logger
   import ExUnit.CaptureLog
 
+  @test_app_name "test-app-name"
+
   test "logs with keyword lists" do
     logged =
       capture_log(fn ->
@@ -38,7 +40,7 @@ defmodule Plexy.LoggerTest do
         Logger.count(:foo, 1)
       end)
 
-    assert logged =~ "count#plexy.foo=1"
+    assert logged =~ "count##{@test_app_name}.foo=1"
   end
 
   test "logs counts for a given metric, assuming the count is one" do
@@ -47,7 +49,7 @@ defmodule Plexy.LoggerTest do
         Logger.count(:foo)
       end)
 
-    assert logged =~ "count#plexy.foo=1"
+    assert logged =~ "count##{@test_app_name}.foo=1"
   end
 
   test "logs time elapsed for given code block" do
@@ -58,7 +60,7 @@ defmodule Plexy.LoggerTest do
         end)
       end)
 
-    assert logged =~ "measure#plexy.sleeping.ms=1"
+    assert logged =~ "measure##{@test_app_name}.sleeping.ms=1"
   end
 
   test "redacts configured keys" do
@@ -79,21 +81,12 @@ defmodule Plexy.LoggerTest do
     refute logged =~ "secret"
   end
 
-  test "includes fallback app name when none specified" do
-    logged =
-      capture_log(fn ->
-        Logger.debug(my_message: "mystuff")
-      end)
-
-    assert logged =~ "app=plexy"
-  end
-
   test "includes app name, when provided" do
     logged =
       capture_log(fn ->
-        Logger.debug(my_message: "mystuff", app: "test-app-name")
+        Logger.debug(my_message: "mystuff", app: "passed-test-app-name")
       end)
 
-    assert logged =~ "app=test-app-name"
+    assert logged =~ "app=passed-test-app-name"
   end
 end
