@@ -1,5 +1,5 @@
 defmodule Plexy.LoggerTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
 
   alias Plexy.Logger
   import ExUnit.CaptureLog
