@@ -6,7 +6,6 @@ defmodule Plexy.Logger do
 
   require Logger
 
-  @plexy_config Application.get_env(:plexy, :config)
   @overrides [:info, :warn, :debug, :error]
 
   for name <- @overrides do
@@ -103,7 +102,7 @@ defmodule Plexy.Logger do
   end
 
   defp app_name do
-    @plexy_config.get(:plexy, :app_name) || raise "You must set app_name for Plexy config"
+    Plexy.Config.get(:plexy, :app_name) || raise "You must set app_name for Plexy config"
   end
 
   defp list_to_line(datum) when is_list(datum) or is_map(datum) do

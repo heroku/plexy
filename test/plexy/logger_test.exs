@@ -6,6 +6,10 @@ defmodule Plexy.LoggerTest do
 
   @test_app_name "test-app-name"
 
+  setup do
+    Application.put_env(:plexy, :app_name, @test_app_name)
+  end
+
   test "logs with keyword lists" do
     logged =
       capture_log(fn ->
@@ -88,5 +92,17 @@ defmodule Plexy.LoggerTest do
       end)
 
     assert logged =~ "app=passed-test-app-name"
+  end
+
+  describe "when app name is not set in the config" do
+    setup do
+      Application.put_env(:plexy, :app_name, nil)
+    end
+
+    test "raises with an error message explaining that app_name be set" do
+      assert_raise RuntimeError, ~r/must set app_name for/, fn ->
+        Logger.debug(my_message: "mystuff", app: "passed-test-app-name")
+      end
+    end
   end
 end
