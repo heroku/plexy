@@ -6,6 +6,10 @@ defmodule Plexy.InstrumentorTest do
 
   @test_app_name "test-app-name"
 
+  setup do
+    Application.put_env(:plexy, :app_name, @test_app_name)
+  end
+
   test "Instrumentor.init/1 defaults level to :info" do
     level = Instrumentor.init([])
     assert level == :info
