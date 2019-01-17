@@ -22,7 +22,7 @@ defmodule Plexy.Logger do
         Plexy.Logger.#{name} fn -> hard_work_goes_here end
     """
     def unquote(name)(datum_or_fn, metadata \\ []) do
-      case datum_or_fn do
+      case decorate_with_app_name(datum_or_fn) do
         datum when is_list(datum) or is_map(datum) ->
           Logger.unquote(name)(fn -> list_to_line(datum) end, metadata)
 
@@ -97,16 +97,31 @@ defmodule Plexy.Logger do
   end
 
   defp metric_name(metric, name) do
-    app = Plexy.Config.get(:plexy, :app_name, System.get_env("APP_NAME") || "plexy")
     name = to_string(name)
-    "#{name}##{app}.#{metric}"
+    "#{name}##{app_name()}.#{metric}"
+  end
+
+  defp app_name do
+    Plexy.Config.get(:plexy, :app_name) || raise "You must set app_name for Plexy config"
   end
 
   defp list_to_line(datum) when is_list(datum) or is_map(datum) do
     datum
     |> Enum.reduce("", &pair_to_segment/2)
     |> String.trim_trailing(" ")
-    |> redact
+    |> redact()
+  end
+
+  defp decorate_with_app_name(datum) when is_list(datum) do
+    Keyword.merge([app: app_name()], datum)
+  end
+
+  defp decorate_with_app_name(datum) when is_map(datum) do
+    Map.merge(%{app: app_name()}, datum)
+  end
+
+  defp decorate_with_app_name(datum_or_fn) do
+    datum_or_fn
   end
 
   defp redact(line) when is_binary(line) do

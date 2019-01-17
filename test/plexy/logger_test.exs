@@ -1,8 +1,14 @@
 defmodule Plexy.LoggerTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
 
   alias Plexy.Logger
   import ExUnit.CaptureLog
+
+  @test_app_name "test-app-name"
+
+  setup do
+    Application.put_env(:plexy, :app_name, @test_app_name)
+  end
 
   test "logs with keyword lists" do
     logged =
@@ -38,7 +44,7 @@ defmodule Plexy.LoggerTest do
         Logger.count(:foo, 1)
       end)
 
-    assert logged =~ "count#plexy.foo=1"
+    assert logged =~ "count##{@test_app_name}.foo=1"
   end
 
   test "logs counts for a given metric, assuming the count is one" do
@@ -47,7 +53,7 @@ defmodule Plexy.LoggerTest do
         Logger.count(:foo)
       end)
 
-    assert logged =~ "count#plexy.foo=1"
+    assert logged =~ "count##{@test_app_name}.foo=1"
   end
 
   test "logs time elapsed for given code block" do
@@ -58,7 +64,7 @@ defmodule Plexy.LoggerTest do
         end)
       end)
 
-    assert logged =~ "measure#plexy.sleeping.ms=1"
+    assert logged =~ "measure##{@test_app_name}.sleeping.ms=1"
   end
 
   test "redacts configured keys" do
@@ -77,5 +83,26 @@ defmodule Plexy.LoggerTest do
       end)
 
     refute logged =~ "secret"
+  end
+
+  test "includes app name, when provided" do
+    logged =
+      capture_log(fn ->
+        Logger.debug(my_message: "mystuff", app: "passed-test-app-name")
+      end)
+
+    assert logged =~ "app=passed-test-app-name"
+  end
+
+  describe "when app name is not set in the config" do
+    setup do
+      Application.put_env(:plexy, :app_name, nil)
+    end
+
+    test "raises with an error message explaining that app_name be set" do
+      assert_raise RuntimeError, ~r/must set app_name for/, fn ->
+        Logger.debug(my_message: "mystuff", app: "passed-test-app-name")
+      end
+    end
   end
 end
