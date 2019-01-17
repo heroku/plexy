@@ -4,8 +4,8 @@ defmodule Plexy.Mixfile do
   def project do
     [
       app: :plexy,
-      version: "0.1.5",
-      elixir: "~> 1.3",
+      version: "0.2.0",
+      elixir: "~> 1.6",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -40,7 +40,7 @@ defmodule Plexy.Mixfile do
       {:plug, "~> 1.0"},
       {:credo, "~> 0.4", only: [:dev, :test]},
       {:dialyxir, "~> 0.4", only: [:dev]},
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
+      {:ex_doc, "0.18.4", only: :dev, runtime: false}
     ]
   end
 
