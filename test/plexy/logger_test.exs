@@ -29,6 +29,15 @@ defmodule Plexy.LoggerTest do
     assert logged =~ "foo=bar"
   end
 
+  test "logs functions" do
+    logged =
+      capture_log(fn ->
+        Logger.debug(fn -> "string inside fn" end)
+      end)
+
+    assert logged =~ "string inside fn"
+  end
+
   test "logs strings with spaces inside of quotes" do
     logged =
       capture_log(fn ->

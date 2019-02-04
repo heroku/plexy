@@ -125,12 +125,24 @@ defmodule Plexy.Logger do
   end
 
   defp redact(line) when is_binary(line) do
-    :plexy
-    |> Application.get_env(:logger, [])
-    |> Keyword.get(:redactors, [])
+    get_redactors()
     |> Enum.reduce_while(line, fn {redactor, opts}, l ->
       redactor.run(l, opts)
     end)
+  end
+
+  defp redact(line) when is_function(line) do
+    get_redactors()
+    |> Enum.reduce_while(line, fn {redactor, opts}, l ->
+      redactor.run(l.(), opts)
+    end)
+  end
+
+  # Get all redactors from the application config
+  defp get_redactors do
+    :plexy
+    |> Application.get_env(:logger, [])
+    |> Keyword.get(:redactors, [])
   end
 
   defp pair_to_segment({k, v}, acc) when is_atom(k) do
