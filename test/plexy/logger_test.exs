@@ -38,6 +38,25 @@ defmodule Plexy.LoggerTest do
     assert logged =~ "string inside fn"
   end
 
+  test "logs functions with interpolated strings" do
+    inside = "inside"
+    logged =
+      capture_log(fn ->
+        Logger.debug(fn -> "interpolated string #{inside} fn" end)
+      end)
+
+    assert logged =~ "interpolated string inside fn"
+  end
+
+  test "logs functions with redacted info" do
+    logged =
+      capture_log(fn ->
+        Logger.debug(fn -> "password=hunter02" end)
+      end)
+
+    assert logged =~ "password=REDACTED"
+  end
+
   test "logs strings with spaces inside of quotes" do
     logged =
       capture_log(fn ->
