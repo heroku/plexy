@@ -14,7 +14,7 @@ Notably, Plexy is not a framework or a set of code generators. You can use Plexy
 
 ```elixir
 def deps do
-  [{:plexy, "~> 0.2.0"}]
+  [{:plexy, "~> 0.3.0"}]
 end
 ```
 

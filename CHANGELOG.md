@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 
+## [0.3.0] - 2019-02-05
+### Added
+- The Logger can now redact functions as logs,[#31](https://github.com/heroku/plexy/pull/31)
+
 ## [0.2.0] - 2019-01-17
 ### Added
 - `app_name` is now required and gets added to log output [@kennyp/@maxbeizer](https://github.com/heroku/plexy/pull/30)
