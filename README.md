@@ -139,7 +139,7 @@ If you would like to use a different env var for the app name you can set it.
 
 ```
 # config/config.exs
-config, :plexy,
+config :plexy,
   app_name: {:system, "HEROKU_APP_NAME"}
 
 # HEROKU_APP_NAME env set to "much_amazing"
