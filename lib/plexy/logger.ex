@@ -133,6 +133,10 @@ defmodule Plexy.Logger do
     end)
   end
 
+  defp redact(fun) when is_function(fun) do
+    redact(fun.())
+  end
+
   defp pair_to_segment({k, v}, acc) when is_atom(k) do
     pair_to_segment({to_string(k), v}, acc)
   end
