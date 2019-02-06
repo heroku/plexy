@@ -36,7 +36,7 @@ defmodule Plexy.Mixfile do
 
   defp deps do
     [
-      {:uuid, "~> 1.1"},
+      {:elixir_uuid, "~> 1.2"},
       {:plug, "~> 1.0"},
       {:credo, "~> 0.4", only: [:dev, :test]},
       {:dialyxir, "~> 0.4", only: [:dev]},
