@@ -39,13 +39,38 @@ defmodule Plexy.Config do
   Used to gain access to the application env.
     ## Examples
 
+       iex> Application.put_env(:my_config, HerokuApi, heroku_api_url: "https://api.heroku.com")
+       iex> Plexy.Config.get(:my_config, [HerokuApi, :heroku_api_url])
+       "https://api.heroku.com"
+       iex> Plexy.Config.get(:my_config, [HerokuApi, :not_set], "and a default")
+       "and a default"
+
        iex> Application.put_env(:my_config, :redis_url, "redis://localhost:6379")
        iex> Plexy.Config.get(:my_config, :redis_url)
        "redis://localhost:6379"
        iex> Plexy.Config.get(:my_config, :foo, "and a default")
        "and a default"
   """
-  def get(config_name, key, default \\ nil) do
+  @spec get(atom(), atom() | [atom(), ...], any()) :: any()
+  def get(config_name, key, default \\ nil)
+
+  def get(config_name, [key | keys], default) do
+    default_resolver = fn
+      nil ->
+        default
+
+      found ->
+        found
+    end
+
+    config_name
+    |> Application.get_env(key)
+    |> get_in(keys)
+    |> default_resolver.()
+    |> resolve(default)
+  end
+
+  def get(config_name, key, default) do
     config_name
     |> Application.get_env(key, default)
     |> resolve(default)
