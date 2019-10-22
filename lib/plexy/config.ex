@@ -15,6 +15,8 @@ defmodule Plexy.Config do
   ran at runtime.
   """
 
+  alias __MODULE__
+
   defmacro __using__(opts \\ [name: :plexy]) do
     unless opts[:name] do
       raise "Option `:name` missing from configuration"
@@ -22,15 +24,15 @@ defmodule Plexy.Config do
 
     quote do
       def get(key, default \\ nil) do
-        Plexy.Config.get(unquote(opts[:name]), key, default)
+        Config.get(unquote(opts[:name]), key, default)
       end
 
       def get_int(key, default \\ nil) do
-        Plexy.Config.get_int(unquote(opts[:name]), key, default)
+        Config.get_int(unquote(opts[:name]), key, default)
       end
 
       def get_bool(key, default \\ nil) do
-        Plexy.Config.get_bool(unquote(opts[:name]), key, default)
+        Config.get_bool(unquote(opts[:name]), key, default)
       end
     end
   end
