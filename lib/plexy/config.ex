@@ -42,9 +42,9 @@ defmodule Plexy.Config do
     ## Examples
 
        iex> Application.put_env(:my_config, HerokuApi, heroku_api_url: "https://api.heroku.com")
-       iex> Plexy.Config.get(:my_config, [HerokuApi, :heroku_api_url])
+       iex> Plexy.Config.get(:my_config, {HerokuApi, :heroku_api_url})
        "https://api.heroku.com"
-       iex> Plexy.Config.get(:my_config, [HerokuApi, :not_set], "and a default")
+       iex> Plexy.Config.get(:my_config, {HerokuApi, :not_set}, "and a default")
        "and a default"
 
        iex> Application.put_env(:my_config, :redis_url, "redis://localhost:6379")
@@ -53,10 +53,10 @@ defmodule Plexy.Config do
        iex> Plexy.Config.get(:my_config, :foo, "and a default")
        "and a default"
   """
-  @spec get(atom(), atom() | [atom(), ...], any()) :: any()
+  @spec get(atom(), atom() | {atom(), atom()}, any()) :: any()
   def get(config_name, key, default \\ nil)
 
-  def get(config_name, [key | keys], default) do
+  def get(config_name, {module_name, key}, default) when is_atom(module_name) and is_atom(key) do
     default_resolver = fn
       nil ->
         default
@@ -66,8 +66,8 @@ defmodule Plexy.Config do
     end
 
     config_name
-    |> Application.get_env(key)
-    |> get_in(keys)
+    |> Application.get_env(module_name)
+    |> get_in([key])
     |> default_resolver.()
     |> resolve(default)
   end
