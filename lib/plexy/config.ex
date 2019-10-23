@@ -15,6 +15,8 @@ defmodule Plexy.Config do
   ran at runtime.
   """
 
+  alias __MODULE__
+
   defmacro __using__(opts \\ [name: :plexy]) do
     unless opts[:name] do
       raise "Option `:name` missing from configuration"
@@ -22,15 +24,15 @@ defmodule Plexy.Config do
 
     quote do
       def get(key, default \\ nil) do
-        Plexy.Config.get(unquote(opts[:name]), key, default)
+        Config.get(unquote(opts[:name]), key, default)
       end
 
       def get_int(key, default \\ nil) do
-        Plexy.Config.get_int(unquote(opts[:name]), key, default)
+        Config.get_int(unquote(opts[:name]), key, default)
       end
 
       def get_bool(key, default \\ nil) do
-        Plexy.Config.get_bool(unquote(opts[:name]), key, default)
+        Config.get_bool(unquote(opts[:name]), key, default)
       end
     end
   end
@@ -39,13 +41,38 @@ defmodule Plexy.Config do
   Used to gain access to the application env.
     ## Examples
 
+       iex> Application.put_env(:my_config, HerokuApi, heroku_api_url: "https://api.heroku.com")
+       iex> Plexy.Config.get(:my_config, {HerokuApi, :heroku_api_url})
+       "https://api.heroku.com"
+       iex> Plexy.Config.get(:my_config, {HerokuApi, :not_set}, "and a default")
+       "and a default"
+
        iex> Application.put_env(:my_config, :redis_url, "redis://localhost:6379")
        iex> Plexy.Config.get(:my_config, :redis_url)
        "redis://localhost:6379"
        iex> Plexy.Config.get(:my_config, :foo, "and a default")
        "and a default"
   """
-  def get(config_name, key, default \\ nil) do
+  @spec get(atom(), atom() | {atom(), atom()}, any()) :: any()
+  def get(config_name, key, default \\ nil)
+
+  def get(config_name, {module_name, key}, default) when is_atom(module_name) and is_atom(key) do
+    default_resolver = fn
+      nil ->
+        default
+
+      found ->
+        found
+    end
+
+    config_name
+    |> Application.get_env(module_name)
+    |> get_in([key])
+    |> default_resolver.()
+    |> resolve(default)
+  end
+
+  def get(config_name, key, default) do
     config_name
     |> Application.get_env(key, default)
     |> resolve(default)
