@@ -40,6 +40,7 @@ defmodule Plexy.LoggerTest do
 
   test "logs functions with interpolated strings" do
     inside = "inside"
+
     logged =
       capture_log(fn ->
         Logger.debug(fn -> "interpolated string #{inside} fn" end)
@@ -120,6 +121,24 @@ defmodule Plexy.LoggerTest do
       end)
 
     assert logged =~ "app=passed-test-app-name"
+  end
+
+  test "includes app name from config" do
+    logged =
+      capture_log(fn ->
+        Logger.debug(my_message: "mystuff")
+      end)
+
+    assert logged =~ "app=#{@test_app_name}"
+  end
+
+  test "includes app name from config, when using `log`" do
+    logged =
+      capture_log(fn ->
+        Logger.log(:debug, my_message: "mystuff")
+      end)
+
+    assert logged =~ "app=#{@test_app_name}"
   end
 
   describe "when app name is not set in the config" do

@@ -107,6 +107,7 @@ defmodule Plexy.Logger do
 
   defp list_to_line(datum) when is_list(datum) or is_map(datum) do
     datum
+    |> decorate_with_app_name()
     |> Enum.reduce("", &pair_to_segment/2)
     |> String.trim_trailing(" ")
     |> redact()
