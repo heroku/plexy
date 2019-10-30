@@ -1,5 +1,6 @@
 defmodule Plexy.InstrumentorTest do
   alias Plexy.Instrumentor
+  alias Plug.Conn
   import ExUnit.CaptureLog
   use ExUnit.Case
   use Plug.Test
@@ -26,7 +27,7 @@ defmodule Plexy.InstrumentorTest do
       capture_log(fn ->
         conn(:get, "/foobar")
         |> Instrumentor.call(@opts)
-        |> Plug.Conn.send_resp(203, "wow")
+        |> Conn.send_resp(203, "wow")
       end)
 
     [
@@ -38,6 +39,7 @@ defmodule Plexy.InstrumentorTest do
       | _anything_else
     ] = String.split(logged, "\n")
 
+    assert start_log_line =~ "app=#{@test_app_name}"
     assert start_log_line =~ "instrumentation=true"
     assert start_log_line =~ "at=start"
     assert start_log_line =~ "path=/foobar"
@@ -48,6 +50,7 @@ defmodule Plexy.InstrumentorTest do
     assert status_log_line =~ "count##{@test_app_name}.requests.203"
     assert status_class_log_line =~ "count##{@test_app_name}.requests.2xx"
 
+    assert finish_log_line =~ "app=#{@test_app_name}"
     assert finish_log_line =~ "instrumentation=true"
     assert finish_log_line =~ "at=finish"
     assert finish_log_line =~ "path=/foobar"

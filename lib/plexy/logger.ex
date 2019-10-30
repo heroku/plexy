@@ -4,6 +4,7 @@ defmodule Plexy.Logger do
   handle non char-data and has a few other helpful logging functions.
   """
 
+  alias Plexy.Config
   require Logger
 
   @overrides [:info, :warn, :debug, :error]
@@ -102,11 +103,12 @@ defmodule Plexy.Logger do
   end
 
   defp app_name do
-    Plexy.Config.get(:plexy, :app_name) || raise "You must set app_name for Plexy config"
+    Config.get(:plexy, :app_name) || raise "You must set app_name for Plexy config"
   end
 
   defp list_to_line(datum) when is_list(datum) or is_map(datum) do
     datum
+    |> decorate_with_app_name()
     |> Enum.reduce("", &pair_to_segment/2)
     |> String.trim_trailing(" ")
     |> redact()

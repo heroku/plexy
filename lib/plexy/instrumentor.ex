@@ -4,8 +4,8 @@ defmodule Plexy.Instrumentor do
   instrumentation at=start method=get path=/apps
   instrumentation at=finish method=get path=/apps elapsed=100 status=200
   """
-  alias Plug.Conn
   alias Plexy.Logger
+  alias Plug.Conn
   @behaviour Plug
 
   @doc """
