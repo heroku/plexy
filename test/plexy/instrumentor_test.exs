@@ -1,5 +1,6 @@
 defmodule Plexy.InstrumentorTest do
   alias Plexy.Instrumentor
+  alias Plug.Conn
   import ExUnit.CaptureLog
   use ExUnit.Case
   use Plug.Test
@@ -26,7 +27,7 @@ defmodule Plexy.InstrumentorTest do
       capture_log(fn ->
         conn(:get, "/foobar")
         |> Instrumentor.call(@opts)
-        |> Plug.Conn.send_resp(203, "wow")
+        |> Conn.send_resp(203, "wow")
       end)
 
     [
