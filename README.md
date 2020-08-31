@@ -73,7 +73,7 @@ You can pass in maps, structs and keyword lists to `Plexy.Logger` methods, and i
 
 Request IDs are a unique identifier associated with every single request your Plexy app receives. Importing the `Plexy.RequestId` plug will append the request ID to the connection and also make it available in the Logger metadata.
 
-Request IDs are read on the request coming in to the app, so if you are on a platform like Heroku that adds Request ID headers, Plexy can read the existing Request ID(s) and append its own Request ID to the list. By default, it reads out of the the list of headers `["Request-Id", "X-Request-Id"]` for incoming requests, but you can configure this list by setting `req_headers` in `Config`.
+Request IDs are read on the request coming in to the app, so if you are on a platform like Heroku that adds Request ID headers, Plexy can read the existing Request ID(s) and append its own Request ID to the list. By default, it reads out of the list of headers `["Request-Id", "X-Request-Id"]` for incoming requests, but you can configure this list by setting `req_headers` in `Config`.
 
 Similarly, it defaults to setting a `Request-Id` header on the response so that you can easily trace requests. To customize this header, set `res_header` in `Config`.
 
@@ -162,7 +162,7 @@ We recommend [Rollbax](https://github.com/elixir-addicts/rollbax) as it lives in
 
 ### Protecting secrets from appearing in logs or Rollbar
 
-A common pain point for production systems can be inadvertant leaks of secrets to log lines or to exception reporters like Rollbar. While each app will have different values that it considers secret, and how much about a customer or end-user can be logged will depend on the industry, we have provided a generic way to redact certain keys from appearing in logs or being passed through the logging backend pipeline to Rollbax.
+A common pain point for production systems can be inadvertent leaks of secrets to log lines or to exception reporters like Rollbar. While each app will have different values that it considers secret, and how much about a customer or end-user can be logged will depend on the industry, we have provided a generic way to redact certain keys from appearing in logs or being passed through the logging backend pipeline to Rollbax.
 
 To use it, add this to `config/config.exs`:
 
