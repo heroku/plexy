@@ -1,6 +1,11 @@
 # Plexy
 
 [![Build Status](https://travis-ci.org/heroku/plexy.svg?branch=master)](https://travis-ci.org/heroku/plexy)
+[![Module Version](https://img.shields.io/hexpm/v/plexy.svg)](https://hex.pm/packages/plexy)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/plexy/)
+[![Total Download](https://img.shields.io/hexpm/dt/plexy.svg)](https://hex.pm/packages/plexy)
+[![License](https://img.shields.io/hexpm/l/plexy.svg)](https://github.com/heroku/plexy/blob/master/LICENSE.md)
+[![Last Updated](https://img.shields.io/github/last-commit/heroku/plexy.svg)](https://github.com/heroku/plexy/commits/master)
 
 [Interagent](https://github.com/interagent)-compatible web services in Elixir, inspired by [Pliny](https://github.com/interagent/pliny).
 
@@ -10,15 +15,17 @@ Notably, Plexy is not a framework or a set of code generators. You can use Plexy
 
 ## Installation
 
-1. Add `plexy` to your list of dependencies in `mix.exs`:
+Add `:plexy` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:plexy, "~> 0.3.0"}]
+  [
+    {:plexy, "~> 0.3.0"}
+  ]
 end
 ```
 
-2. Require Plexy plugs in your application:
+Require Plexy plugs in your application:
 
 ```elixir
 defmodule MyRouter do
@@ -31,7 +38,7 @@ defmodule MyRouter do
 end
 ```
 
-3. Call the `Plexy.Logger` wherever you wish to log information:
+Call the `Plexy.Logger` wherever you wish to log information:
 
 ```elixir
 Plexy.Logger.count(:http_clients_404, 1)
@@ -187,7 +194,7 @@ iex> SimpleRedactor.run("password=mysecred", filter: ["password"])
 {:cont, ""}
 ```
 
-## License
+## Copyright and License
 
 Created at Heroku by:
 
@@ -197,4 +204,7 @@ Created at Heroku by:
 - [@kennyp](https://github.com/kennyp)
 - [@mathias](https://github.com/mathias)
 
-Released under the MIT license.
+Copyright (c) 2019 maxbeizer
+
+This work is free. You can redistribute it and/or modify it under the
+terms of the MIT License. See the [LICENSE.md](./LICENSE.md) file for more details.

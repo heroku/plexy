@@ -1,14 +1,18 @@
 defmodule Plexy.Mixfile do
   use Mix.Project
 
+  @source_url "https://github.com/heroku/plexy"
+  @version "0.3.3"
+
   def project do
     [
       app: :plexy,
-      version: "0.3.3",
+      version: @version,
       elixir: "~> 1.6",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      docs: docs(),
       package: package(),
       dialyzer: dialyzer()
     ]
@@ -26,7 +30,7 @@ defmodule Plexy.Mixfile do
         "@mwoods79",
         "@mathias"
       ],
-      links: %{"GitHub" => "https://github.com/heroku/plexy"}
+      links: %{"GitHub" => @source_url}
     ]
   end
 
@@ -40,7 +44,21 @@ defmodule Plexy.Mixfile do
       {:plug, "~> 1.0"},
       {:credo, "~> 0.4", only: [:dev, :test]},
       {:dialyxir, "~> 0.4", only: [:dev]},
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+    ]
+  end
+
+  defp docs do
+    [
+      extras: [
+        "CHANGELOG.md": [],
+        "LICENSE.md": [title: "License"],
+        "README.md": [title: "Overview"]
+      ],
+      main: "readme",
+      source_url: @source_url,
+      source_ref: "#{@version}",
+      formatters: ["html"]
     ]
   end
 
