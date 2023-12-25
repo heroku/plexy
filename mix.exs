@@ -38,7 +38,7 @@ defmodule Plexy.Mixfile do
     [
       {:elixir_uuid, "~> 1.2"},
       {:plug, "~> 1.0"},
-      {:credo, "~> 0.4", only: [:dev, :test]},
+      {:credo, "~> 1.7", only: [:dev, :test]},
       {:dialyxir, "~> 0.4", only: [:dev]},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
