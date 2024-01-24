@@ -42,7 +42,7 @@ defmodule Plexy.RequestIdTest do
     assert String.ends_with?(header, ",1234-abc")
   end
 
-  test "keeps all existing request ids when mulitple exist" do
+  test "keeps all existing request ids when multiple exist" do
     conn =
       %Plug.Conn{
         req_headers: [

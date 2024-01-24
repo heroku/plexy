@@ -13,7 +13,7 @@ defmodule Plexy.Logger do
     @doc """
     Logs a #{name} message.
 
-    Returns the atom :ok or an {:error, reason}
+    Returns the atom `:ok` or an `{:error, reason}`.
 
     ## Examples
 
@@ -21,6 +21,7 @@ defmodule Plexy.Logger do
         Plexy.Logger.#{name} [color: "purple"]
         Plexy.Logger.#{name} %{sky: "blue"}
         Plexy.Logger.#{name} fn -> hard_work_goes_here end
+
     """
     def unquote(name)(datum_or_fn, metadata \\ []) do
       case decorate_with_app_name(datum_or_fn) do
@@ -34,13 +35,14 @@ defmodule Plexy.Logger do
   end
 
   @doc """
-  Logs a info message with the given metric as a count
+  Logs a info message with the given metric as a count.
 
   ## Examples
 
       Plexy.Logger.count(:signup, 2)
       Plexy.Logger.count("registration", 1)
       Plexy.Logger.count("registration") # same as above
+
   """
   def count(metric, count \\ 1) do
     info(%{metric_name(metric, :count) => count})
@@ -52,6 +54,7 @@ defmodule Plexy.Logger do
   ## Examples
 
       Plexy.Logger.measure(:request, 200)
+
   """
   def measure(metric, time) when is_number(time) do
     info(%{metric_name(metric, :measure) => time})
@@ -65,6 +68,7 @@ defmodule Plexy.Logger do
 
       Plexy.Logger.measure(:call_core, &super_slow_call/0)
       Plexy.Logger.measure("rebuild", fn -> rebuild_the_invoice end)
+
   """
   def measure(metric, fun) do
     {time, result} = :timer.tc(fun)
@@ -73,9 +77,10 @@ defmodule Plexy.Logger do
   end
 
   @doc """
-  Log using the given level and data. This function should be avoided in
-  favor of `.info`, `.warn`, `.debug`, `.error`, because they are removed
-  at compile time.
+  Log using the given level and data.
+
+  This function should be avoided in favor of `.info`, `.warn`, `.debug`,
+  `.error`, because they are removed at compile time.
   """
   def log(level, datum_or_fn, metadata \\ [])
 
