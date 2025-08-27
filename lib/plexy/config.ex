@@ -4,12 +4,11 @@ defmodule Plexy.Config do
   variable on the current system at runtime or a default provided value.
 
   The config.exs can look like this
-  ```
-  config :plexy,
-    redis_url: {:system, "REDIS_URL"},
-    port: {:system, "PORT", 5000},
-    normal: "normal"
-  ```
+
+      config :plexy,
+        redis_url: {:system, "REDIS_URL"},
+        port: {:system, "PORT", 5000},
+        normal: "normal"
 
   When using this modules `get/3` function, System.get_env("REDIS_URL") will be
   ran at runtime.
@@ -39,7 +38,8 @@ defmodule Plexy.Config do
 
   @doc """
   Used to gain access to the application env.
-    ## Examples
+
+  ## Examples
 
        iex> Application.put_env(:my_config, HerokuApi, heroku_api_url: "https://api.heroku.com")
        iex> Plexy.Config.get(:my_config, {HerokuApi, :heroku_api_url})
@@ -52,6 +52,7 @@ defmodule Plexy.Config do
        "redis://localhost:6379"
        iex> Plexy.Config.get(:my_config, :foo, "and a default")
        "and a default"
+
   """
   @spec get(atom(), atom() | {atom(), atom()}, any()) :: any()
   def get(config_name, key, default \\ nil)
@@ -80,12 +81,15 @@ defmodule Plexy.Config do
 
   @doc """
   Like `get/3` except it attempts to convert the value to an integer.
-    ## Examples
+
+  ## Examples
+
        iex> Application.put_env(:my_config, :port, "5000")
        iex> Plexy.Config.get_int(:my_config, :port, 9999)
        5000
        iex> Plexy.Config.get_int(:my_config, :foo, "123")
        123
+
   """
   def get_int(config_name, key, default \\ nil) do
     case get(config_name, key, default) do
@@ -102,7 +106,9 @@ defmodule Plexy.Config do
 
   @doc """
   Like `get/3` except it attempts to convert the value to an bool.
-    ## Examples
+
+  ## Examples
+
        iex> Plexy.Config.get_bool(:my_config, :bar, "true")
        true
        iex> Plexy.Config.get_bool(:my_config, :bar, "yes")

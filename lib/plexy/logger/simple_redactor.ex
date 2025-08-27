@@ -1,6 +1,6 @@
 defmodule Plexy.Logger.SimpleRedactor do
   @moduledoc """
-  SimpleRedactor is able to filter and redact sensative data
+  SimpleRedactor is able to filter and redact sensitive data.
   """
 
   @doc """
@@ -15,6 +15,7 @@ defmodule Plexy.Logger.SimpleRedactor do
       {:cont, "username=REDACTED age=21"}
       iex> SimpleRedactor.run("password=mysecred", filter: ["password"])
       {:cont, ""}
+
   """
   def run("", _opts), do: {:halt, ""}
 

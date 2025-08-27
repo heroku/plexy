@@ -1,7 +1,7 @@
 defmodule Plexy.RequestId do
   @moduledoc """
-  A plug that reads from specified :req_headers for given request ids,
-  prepends a new generated one, and adds all as a comma seperated list to the
+  A plug that reads from specified `:req_headers` for given request ids,
+  prepends a new generated one, and adds all as a comma separated list to the
   specified res_header.
   """
   alias Plug.Conn
@@ -10,8 +10,10 @@ defmodule Plexy.RequestId do
   @default_headers ["request-id", "x-request-id"]
 
   @doc """
-  Initializes the plug. Returns a configuration map with specified
-  :req_headers and :res_headers for use by the other functions.
+  Initializes the plug.
+
+  Returns a configuration map with specified `:req_headers` and `:res_headers`
+  for use by the other functions.
   """
   def init(opts) do
     req_headers =
@@ -24,8 +26,8 @@ defmodule Plexy.RequestId do
   end
 
   @doc """
-  Reads :res_headers, injects a new uuid, than adds them all to the specified
-  :res_headers and the conn's :assigns
+  Reads `:res_headers`, injects a new uuid, than adds them all to the specified
+  `:res_headers` and the conn's `:assigns`.
   """
   def call(conn, config) do
     conn
