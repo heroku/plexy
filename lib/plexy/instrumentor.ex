@@ -1,15 +1,19 @@
 defmodule Plexy.Instrumentor do
   @moduledoc """
   A plug for logging basic request information in the format:
-  instrumentation at=start method=get path=/apps
-  instrumentation at=finish method=get path=/apps elapsed=100 status=200
+
+    * instrumentation at=start method=get path=/apps
+    * instrumentation at=finish method=get path=/apps elapsed=100 status=200
+
   """
   alias Plexy.Logger
   alias Plug.Conn
   @behaviour Plug
 
   @doc """
-  Initializes the plug. Log level is supported with :log.
+  Initializes the plug.
+
+  Log level is supported with `:log`.
   """
   def init(opts) do
     Keyword.get(opts, :log, :info)
