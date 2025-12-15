@@ -2,5 +2,9 @@
 # Each line is a file pattern followed by one or more owners.
 
 # These owners will be the default owners for everything in the repo.
-* @heroku/front-end
+# Comment line immediately above ownership line is reserved for related GUS information.
+# Please exercise caution while editing.
+
+#GUSINFO: Heroku FE Dev Tools,Heroku CLI & Plugins
+* @heroku/frontend-dev-tooling @heroku/front-end
 #ECCN:Open Source
